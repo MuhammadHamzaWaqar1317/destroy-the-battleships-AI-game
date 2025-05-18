@@ -1,0 +1,17 @@
+export const insults = [
+  "💥 Boom! Did you even *try* to dodge that? 🫠",
+  "🧠 My AI's IQ is higher than your hit accuracy 🎯",
+  "🚢 Another ship down? Maybe you're better at chess. ♟️",
+  "🤖 I'm not evil, you're just terrible. 😈",
+  "📡 Did you mistake strategy for button smashing again?",
+  "🎯 I don’t miss. You clearly do. A lot. 😵‍💫",
+  "🪦 Another ship buried. Should I slow down for you? 🐢",
+  "😴 I'm winning in my sleep. Wake me up when you’re good.",
+  "📉 Your chances of winning just sank with that ship. 😬",
+  "🛑 Stop it. You're embarrassing yourself. 💁‍♂️",
+  "🧽 SpongeBob has better naval tactics than you. 🍍",
+  "🫡 Respectfully... you suck at this. Carry on. 🫥",
+  "🕳️ You’re not losing, you're just... *strategically evaporating*. ☠️",
+  "📦 Amazon delivers faster hits than you do. 🚚",
+  "💣 You play like you're using dial-up. 🐌",
+];

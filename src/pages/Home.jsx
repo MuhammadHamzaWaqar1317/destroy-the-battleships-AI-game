@@ -1,32 +1,45 @@
 import React, { useEffect, useState } from "react";
 import GridTile from "../components/GridTile";
 import Modal from "../components/Modal";
+import { notification } from "antd";
+import { insults } from "../utils/insults";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ships, setShips] = useState([]);
-  const [userTargets, setUserTargets] = useState([]);
+  const [learnFromUserTargets, setlearnFromUserTargets] = useState([]);
   const [shipLocations, setShipLocations] = useState([]);
   const [gameOver, setGameOver] = useState(false);
   const [gameMode, setGameMode] = useState("hard");
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (title, description) => {
+    api["error"]({
+      message: title,
+      description,
+    });
+  };
 
   const restartGame = () => {
     setShips([]);
-    setUserTargets([]);
+    setlearnFromUserTargets([]);
     setShipLocations([]);
     setGameOver(false);
     setShips([...generateShipsArray()]);
   };
 
   const handleClick = (index) => {
-    userTargets.push(index);
-    if (userTargets.length == 8) {
+    learnFromUserTargets.push(index);
+    if (learnFromUserTargets.length == 9) {
       setGameOver(true);
       if (gameMode == "easy") {
         ships.forEach((ship) => (ship.initialValue = false));
         setShips([...ships]);
       } else {
-        repositionShips();
+        findSafestPath();
+        openNotification(
+          "You Lost :(",
+          insults[Math.floor(Math.random() * insults.length)]
+        );
       }
       return;
     }
@@ -42,11 +55,11 @@ function Home() {
     setShips([...ships]);
   };
 
-  const repositionShips = () => {
+  const findSafestPath = () => {
     const totalNeeded = 8;
     const maxRange = 50;
     const result = new Set();
-    const existingSet = new Set(userTargets);
+    const existingSet = new Set(learnFromUserTargets);
 
     const availableNumbers = [];
     for (let i = 0; i < maxRange; i++) {
@@ -64,10 +77,8 @@ function Home() {
       result.add(availableNumbers.splice(randomIndex, 1)[0]);
     }
 
-    // ✅ Clear all previous ships
     ships.forEach((ship) => (ship.shipHere = false));
 
-    // ✅ Set new ship locations
     result.forEach((index) => (ships[index].shipHere = true));
 
     setShips([...ships]);
@@ -80,14 +91,12 @@ function Home() {
     const total = 50;
     const shipCount = 8;
 
-    // Step 1: Create an array with all shipHere set to false
     const ships = Array.from({ length: total }, () => ({
       initialValue: true,
       shipHere: false,
       shipHit: false,
     }));
 
-    // Step 2: Randomly pick 8 unique indices to set shipHere to true
     const shipIndices = new Set();
     while (shipIndices.size < shipCount) {
       const randomIndex = Math.floor(Math.random() * total);
@@ -96,7 +105,6 @@ function Home() {
     setShipLocations([...shipIndices]);
     console.log(shipIndices);
 
-    // Step 3: Set shipHere to true at the selected indices
     shipIndices.forEach((index) => {
       ships[index].shipHere = true;
     });
@@ -106,6 +114,7 @@ function Home() {
 
   return (
     <>
+      {contextHolder}
       <div className="h-10 p-3 flex justify-between">
         <h2 className="font-semibold text-2xl text-blue-500">
           Destroy The BattleShips
